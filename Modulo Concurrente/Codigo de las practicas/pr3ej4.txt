@@ -1,0 +1,72 @@
+programa ejercicio4
+procesos
+  proceso mandaIDs
+  comenzar
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    EnviarMensaje(3,robot3)
+    EnviarMensaje(4,robot4)
+  fin
+  proceso recolectarTodasLasFlores
+  comenzar
+    Pos(11,11)
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+  fin
+areas
+  ciudad:AreaC(1,1,100,100)
+robots
+  robot coordinador
+  variables
+    ultimo:numero
+  comenzar
+    mandaIDs
+    RecibirMensaje(ultimo,*)
+    Informar(ultimo)
+    recolectarTodasLasFlores
+  fin
+  robot tipoRobot
+  variables
+    hayF:boolean
+    quienEs:numero
+    AV:numero
+    CA:numero
+  comenzar
+    AV:= PosAv
+    CA:= PosCa
+    hayF:= V
+    RecibirMensaje(quienEs,robotCoordinador)
+    mientras(hayF = V)
+      BloquearEsquina(10,10)
+      Pos(10,10)
+      si(HayFlorEnLaEsquina)
+        tomarFlor
+        BloquearEsquina(11,11)
+        Pos(11,11)
+        depositarFlor
+        Pos(AV,CA)
+        LiberarEsquina(11,11)
+      sino
+        hayF:= F
+        Pos(AV,CA)
+      LiberarEsquina(10,10)
+    EnviarMensaje(quienEs,robotCoordinador)
+  fin
+variables
+  robotCoordinador:coordinador
+  robot1:tipoRobot
+  robot2:tipoRobot
+  robot3:tipoRobot
+  robot4:tipoRobot
+comenzar
+  AsignarArea(robotCoordinador,ciudad)
+  AsignarArea(robot1,ciudad)
+  AsignarArea(robot2,ciudad)
+  AsignarArea(robot3,ciudad)
+  AsignarArea(robot4,ciudad)
+  Iniciar(robotCoordinador,1,1)
+  Iniciar(robot1,9,9)
+  Iniciar(robot2,9,10)
+  Iniciar(robot3,9,11)
+  Iniciar(robot4,9,12)
+fin

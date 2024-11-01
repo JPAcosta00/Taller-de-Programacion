@@ -1,0 +1,135 @@
+programa ejercicio2
+procesos
+  proceso mandaIDs
+  comenzar
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+  fin
+  proceso juntaFlores
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+  fin
+  proceso juntaPapeles
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+  proceso junta (E que:numero)
+  comenzar
+    si(que = 1)
+      juntaFlores
+    sino 
+      juntaPapeles
+  fin
+  proceso apunta
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso escalonDerecha(E mov:numero; E queJunta:numero)
+  comenzar
+    repetir mov
+      mover
+    junta(queJunta)
+    derecha
+    repetir mov
+      mover
+    junta(queJunta)
+    apunta
+  fin
+  proceso avisaAlJefe1 (E quienEs:numero)
+  comenzar
+    mover
+    derecha
+    BloquearEsquina(15,15)
+    mover
+    EnviarMensaje(quienEs,robotJefe)
+    repetir 2
+      derecha
+    mover
+    LiberarEsquina(15,15)
+  fin
+  proceso escalonIzquierda(E movi:numero;E queJ:numero)
+  comenzar
+    repetir movi
+      mover
+    junta(queJ)
+    apunta
+    repetir movi
+      mover
+    junta(queJ)
+    derecha
+  fin
+  proceso avisaAlJefe2 (E who:numero)
+  comenzar
+    mover
+    apunta
+    BloquearEsquina(15,15)
+    mover
+    EnviarMensaje(who,robotJefe)
+    repetir 2 
+      derecha
+    mover
+    LiberarEsquina(15,15)
+  fin
+areas
+  ciudad:AreaP(1,1,100,100)
+robots
+  robot jefe
+  variables
+    quien:numero
+  comenzar
+    mandaIDs
+    RecibirMensaje(quien,*)
+    si(quien = 1)
+      Informar(1)
+    sino
+      Informar(2)
+  fin
+  robot robotIzquierdo
+  variables
+    quienSoy:numero
+    movimientos:numero
+  comenzar
+    movimientos:=5
+    RecibirMensaje(quienSoy,robotJefe)
+    repetir 4
+      escalonDerecha(movimientos,1)
+      movimientos:= movimientos-1
+      si(movimientos = 1)
+        avisaAlJefe1(quienSoy)
+        movimientos:= 2
+    repetir 4
+      escalonDerecha(movimientos,1)
+      movimientos:= movimientos+1
+  fin
+  robot robotDerecho
+  variables
+    moverse:numero
+    quienEs:numero
+  comenzar
+    moverse:=5
+    RecibirMensaje(quienEs,robotJefe)
+    repetir 4
+      escalonIzquierda(moverse,2)
+      moverse:= moverse -1
+      si(moverse = 1)
+        avisaAlJefe2(quienEs)
+        moverse:= 2
+    repetir 4
+      escalonIzquierda(moverse,2)
+      moverse:= moverse+1
+  fin
+variables 
+  robot2:robotDerecho
+  robot1:robotIzquierdo
+  robotJefe:jefe
+comenzar
+  AsignarArea(robot1,ciudad)
+  AsignarArea(robot2,ciudad)
+  AsignarArea(robotJefe,ciudad)
+  Iniciar(robotJefe,15,1)
+  Iniciar(robot1,1,1)
+  Iniciar(robot2,31,1)
+fin

@@ -1,0 +1,139 @@
+programa ejercicio4
+procesos
+  proceso mandaInfo (E aQuien:numero; E numCalle:numero; E numAve:numero)
+  comenzar
+    si(aQuien = 1) 
+      EnviarMensaje(V,robot1)
+      EnviarMensaje(numCalle,robot1)
+      EnviarMensaje(numAve,robot1)
+    sino
+      si(aQuien = 2)
+        EnviarMensaje(V,robot2)
+        EnviarMensaje(numCalle,robot2)
+        EnviarMensaje(numAve,robot2)
+      sino
+        EnviarMensaje(V,robot3)
+        EnviarMensaje(numCalle,robot3)
+        EnviarMensaje(numAve,robot3)
+  fin
+  proceso juntaTotal(ES canti:numero)
+  variables
+    av:numero
+    ca:numero
+  comenzar
+    av:= PosAv
+    ca:= PosCa
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    mientras(HayFlorEnLaEsquina)
+      canti:= canti+1
+      tomarFlor
+    Pos(av,ca)
+    LiberarEsquina(10,10)                 
+  fin
+  proceso juntar(E calle:numero; E ave:numero)
+  variables
+    av:numero
+    ca:numero
+  comenzar
+    av:= PosAv
+    ca:= PosCa
+    BloquearEsquina(ave,calle)
+    Pos(ave,calle)
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+    Pos(av,ca)
+    LiberarEsquina(ave,calle)
+  fin
+  proceso dejaEnDeposito
+  variables
+    av:numero
+    ca:numero
+  comenzar
+    av:=PosAv
+    ca:=PosCa
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    mientras(HayFlorEnLaBolsa)
+      depositarFlor
+    Pos(av,ca)
+    LiberarEsquina(10,10)
+  fin
+  proceso terminaRobots
+  comenzar
+    EnviarMensaje(F,robot1)
+    EnviarMensaje(F,robot2)
+    EnviarMensaje(F,robot3)
+  fin
+areas
+  cuadrante:AreaPC(40,40,60,60)
+  ciudad:AreaC(1,1,100,1)
+  deposito:AreaPC(10,10,10,10)
+robots
+  robot fiscalizador
+  variables
+    calle:numero
+    avenida:numero
+    quien:numero
+    termino:boolean
+    cantidad:numero
+    listo:numero
+  comenzar
+    listo:=0
+    cantidad:=0
+    repetir 8
+      Random(calle,40,60)
+      Random(avenida,40,60)
+      Random(quien,1,3)
+      mandaInfo(quien,calle,avenida)
+    terminaRobots
+    repetir 3
+      RecibirMensaje(termino,*)
+      si(termino = V)
+        listo:= listo +1
+    si(listo = 3)
+      juntaTotal(cantidad)
+      Informar(cantidad)
+  fin
+  robot florero
+  variables
+    id:numero
+    numC:numero
+    numA:numero
+    orden:boolean
+    control:boolean
+  comenzar
+    control:=V
+    mientras(control = V)
+      RecibirMensaje(orden,jefe)
+      si(orden = V)
+        RecibirMensaje(numC,jefe)
+        RecibirMensaje(numA,jefe)
+        juntar(numC,numA)
+      sino 
+        control := F
+    dejaEnDeposito
+    EnviarMensaje(V,jefe)
+  fin
+variables
+  jefe:fiscalizador
+  robot1:florero
+  robot2:florero
+  robot3:florero
+comenzar
+  AsignarArea(jefe,ciudad)
+  AsignarArea(jefe,deposito)
+  AsignarArea(robot1,ciudad)
+  AsignarArea(robot1,deposito)
+  AsignarArea(robot1,cuadrante)
+  AsignarArea(robot2,ciudad)
+  AsignarArea(robot2,deposito)
+  AsignarArea(robot2,cuadrante)
+  AsignarArea(robot3,ciudad)
+  AsignarArea(robot3,deposito)
+  AsignarArea(robot3,cuadrante)
+  Iniciar(jefe,4,1)
+  Iniciar(robot1,1,1)
+  Iniciar(robot2,2,1)
+  Iniciar(robot3,3,1)
+fin

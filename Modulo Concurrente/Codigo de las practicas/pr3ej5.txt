@@ -1,0 +1,77 @@
+programa ejericio5
+procesos
+  proceso mandaIDs 
+  comenzar
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    EnviarMensaje(3,robot3)
+    EnviarMensaje(4,robot4)
+  fin
+  proceso calculaMasLejos(ES max:numero; ES rMas:numero; E numCalle:numero; E queRobot:numero)
+  comenzar
+    si(numCalle > max)
+      rMas:=queRobot
+      max:=numCalle
+  fin
+areas
+  ciudad:AreaC(1,1,100,100)
+robots
+  robot coordinador
+  variables
+    quien:numero
+    calle:numero
+    mas:numero
+    robotMas:numero
+  comenzar
+    mas:=-1
+    mandaIDs
+    repetir 4
+      RecibirMensaje(quien,*)
+      RecibirMensaje(calle,*)
+      calculaMasLejos(mas,robotMas,calle,quien)
+  fin
+  robot corredor
+  variables
+    quienSoy:numero
+    sigue:boolean
+    AV:numero
+    CA:numero
+  comenzar
+    sigue:=V
+    RecibirMensaje(quienSoy,robotCoordinador)
+    mientras(sigue = V)&(PosCa < 99)
+      AV:= PosAv
+      CA:= PosCa
+      BloquearEsquina(11,11)
+      Pos(11,11)
+      si(HayPapelEnLaEsquina)
+        tomarPapel
+        Pos(AV,CA)
+        LiberarEsquina(11,11)
+        depositarPapel
+        mover
+      sino
+        Pos(AV,CA)
+        LiberarEsquina(11,11)
+        sigue:= F
+    EnviarMensaje(quienSoy,robotCoordinador)
+    EnviarMensaje(PosCa,robotCoordinador)  
+  fin
+variables
+  robotCoordinador:coordinador
+  robot1:corredor
+  robot2:corredor
+  robot3:corredor
+  robot4:corredor
+comenzar
+  AsignarArea(robotCoordinador,ciudad)
+  AsignarArea(robot1,ciudad)
+  AsignarArea(robot2,ciudad)
+  AsignarArea(robot3,ciudad)
+  AsignarArea(robot4,ciudad)
+  Iniciar(robotCoordinador,1,1)
+  Iniciar(robot1,4,1)
+  Iniciar(robot2,6,1)
+  Iniciar(robot3,8,1)
+  Iniciar(robot4,10,1)
+fin

@@ -1,0 +1,104 @@
+programa ejercicio5
+procesos 
+  proceso mandaIdentificacion
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+  fin
+  proceso dejaPapel(E cont:numero)
+  comenzar
+    mientras(cont <> 0)
+      depositarPapel
+      cont:= cont-1
+  fin
+  proceso colocaPapeles(E canti:numero)
+  variables
+    av:numero
+    ca:numero
+  comenzar
+    av:=PosAv
+    ca:=PosCa
+    BloquearEsquina(100,1)
+    Pos(100,1)
+    dejaPapel(canti)
+    Pos(av,ca)
+    LiberarEsquina(100,1)
+  fin
+  proceso mandaSeñal(E iden:numero; E cuanto:numero)
+  comenzar
+    si(iden = 1)
+      EnviarMensaje(cuanto,r1)
+    sino
+      si(iden = 2)
+        EnviarMensaje(cuanto,r2)
+      sino
+        EnviarMensaje(cuanto,r3)
+  fin
+  proceso buscaUnPapel
+  variables
+    AV:numero
+    CA:numero
+  comenzar
+    AV:=PosAv
+    CA:=PosCa
+    BloquearEsquina(100,1)
+    Pos(100,1)
+    tomarPapel
+    Pos(AV,CA)
+    LiberarEsquina(100,1)
+  fin
+  proceso recolectar(E cant:numero)
+  comenzar
+    mientras(cant <> 0)
+      buscaUnPapel
+      depositarPapel
+      cant:= cant-1
+  fin
+areas
+  deposito:AreaPC(100,1,100,1)
+  esqServidor:AreaP(13,1,13,1)
+  esqClientes:AreaP(10,1,12,1)
+robots
+  robot servidor
+  variables
+    id:numero
+    cantP:numero
+  comenzar
+    mandaIdentificacion
+    repetir 12
+      RecibirMensaje(id,*)
+      Random(cantP,1,5)
+      colocaPapeles(cantP)
+      mandaSeñal(id,cantP)
+  fin
+  robot cliente
+  variables
+    quienEs:numero
+    cuantoDejo:numero
+  comenzar
+    RecibirMensaje(quienEs,jefe)
+    repetir 4
+      EnviarMensaje(quienEs,jefe)
+      RecibirMensaje(cuantoDejo,jefe)
+      recolectar(cuantoDejo)
+  fin
+variables
+  r1:cliente
+  r2:cliente
+  r3:cliente
+  jefe:servidor
+comenzar
+  AsignarArea(jefe,esqServidor)
+  AsignarArea(jefe,deposito)
+  AsignarArea(r1,esqClientes)
+  AsignarArea(r1,deposito)
+  AsignarArea(r2,esqClientes)
+  AsignarArea(r2,deposito)
+  AsignarArea(r3,esqClientes)
+  AsignarArea(r3,deposito)
+  Iniciar(jefe,13,1)
+  Iniciar(r1,10,1)
+  Iniciar(r2,11,1)
+  Iniciar(r3,12,1)
+fin

@@ -1,0 +1,86 @@
+programa ejercicio5
+procesos
+  proceso preguntaFlores
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor 
+  fin
+  proceso preguntaPapeles
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+  proceso consulta (E iden:numero)
+  comenzar
+    si(iden = 1)
+      preguntaFlores
+    sino 
+      preguntaPapeles
+  fin
+  proceso dejaFlores
+  comenzar
+    mientras(HayFlorEnLaBolsa)
+      depositarFlor
+  fin
+  proceso dejaPapeles
+  comenzar
+    mientras(HayPapelEnLaBolsa)
+      depositarPapel
+  fin
+  proceso limpiaCalles(E id:numero; E cantidad:numero)
+  comenzar
+    repetir cantidad
+      consulta(id)
+      mover
+    si(id = 1)
+      dejaFlores
+    sino 
+      dejaPapeles
+  fin
+areas
+  ciudad:AreaC(1,1,100,100)
+robots
+  robot uno
+  comenzar
+    Pos(1,75)
+    derecha
+    limpiaCalles(1,15)
+    Pos(1,80)
+    limpiaCalles(1,15)
+  fin 
+  robot dos 
+  comenzar
+    Pos(75,80)
+    limpiaCalles(2,20)
+    Pos(80,80)
+    limpiaCalles(2,20)
+  fin
+  robot tres
+  comenzar
+    Pos(70,15)
+    limpiaCalles(1,30)
+    Pos(70,10)
+    limpiaCalles(1,30)
+  fin
+  robot cuatro 
+  comenzar
+    Pos(10,1)
+    limpiaCalles(2,10)
+    Pos(15,1)
+    limpiaCalles(2,10)
+  fin
+variables
+  robot1:uno
+  robot2:dos
+  robot3:tres
+  robot4:cuatro
+comenzar
+  AsignarArea(robot1,ciudad)
+  AsignarArea(robot2,ciudad)
+  AsignarArea(robot3,ciudad)
+  AsignarArea(robot4,ciudad)
+  Iniciar(robot1,1,75)
+  Iniciar(robot2,75,80)
+  Iniciar(robot3,70,15)
+  Iniciar(robot4,10,1)
+fin

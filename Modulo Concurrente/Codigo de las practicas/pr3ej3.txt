@@ -1,0 +1,97 @@
+programa ejercicio3
+procesos
+  proceso mandaIDs (E a:numero; E c:numero)
+  comenzar
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(a,robot1)
+    EnviarMensaje(c,robot1)
+    EnviarMensaje(2,robot2)
+    EnviarMensaje(a,robot2)
+    EnviarMensaje(c,robot2)
+    EnviarMensaje(3,robot3)
+    EnviarMensaje(a,robot3)
+    EnviarMensaje(c,robot3)
+    EnviarMensaje(4,robot4)
+    EnviarMensaje(a,robot4)
+    EnviarMensaje(c,robot4)
+  fin
+  proceso calculaMaximo(ES maxi:numero; ES rMas:numero; E canti:numero; E who:numero)
+  comenzar
+    si(canti > maxi)
+      rMas:= who
+      maxi:= canti
+  fin
+areas
+  cuadrante:AreaPC(2,2,10,10)
+  ciudad:AreaC(1,1,10,1)
+robots
+  robot jefe
+  variables
+    ave:numero
+    ca:numero
+    quien:numero
+    canti:numero
+    max:numero
+    robotMax:numero
+  comenzar
+    Random(ave,2,10)
+    Random(ca,2,10)
+    mandaIDs(ave,ca)
+    repetir 4
+      RecibirMensaje(quien,*)
+      RecibirMensaje(canti,*)
+      calculaMaximo(max,robotMax,canti,quien)
+    Informar(robotMax)
+  fin
+  robot juntador
+  variables
+    quienSoy:numero
+    avenida:numero
+    calle:numero
+    cantidad:numero
+    AV:numero
+    CA:numero
+    hayFlor:boolean
+  comenzar
+    AV:=PosAv
+    CA:=PosCa
+    hayFlor:=V
+    cantidad:=0
+    RecibirMensaje(quienSoy,robotJefe)
+    RecibirMensaje(avenida,robotJefe)
+    RecibirMensaje(calle,robotJefe)
+    mientras(hayFlor = V)
+      BloquearEsquina(avenida,calle)
+      Pos(avenida,calle)
+      si(HayFlorEnLaEsquina)
+        tomarFlor
+        cantidad:=cantidad+1
+      sino 
+        hayFlor:= F
+      Pos(AV,CA)
+      LiberarEsquina(avenida,calle)
+    EnviarMensaje(quienSoy,robotJefe)
+    EnviarMensaje(cantidad,robotJefe)
+  fin
+variables
+  robotJefe:jefe
+  robot1:juntador
+  robot2:juntador
+  robot3:juntador
+  robot4:juntador
+comenzar
+  AsignarArea(robotJefe,ciudad)
+  AsignarArea(robot1,cuadrante)
+  AsignarArea(robot1,ciudad)
+  AsignarArea(robot2,cuadrante)
+  AsignarArea(robot2,ciudad)
+  AsignarArea(robot3,cuadrante)
+  AsignarArea(robot3,ciudad)
+  AsignarArea(robot4,cuadrante)
+  AsignarArea(robot4,ciudad)
+  Iniciar(robotJefe,1,1)
+  Iniciar(robot1,2,1)
+  Iniciar(robot2,3,1)
+  Iniciar(robot3,4,1)
+  Iniciar(robot4,5,1)
+fin

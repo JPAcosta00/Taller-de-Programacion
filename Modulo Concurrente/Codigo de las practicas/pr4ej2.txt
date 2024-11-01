@@ -1,0 +1,100 @@
+programa ejercicio2
+procesos
+  proceso agarrarPapeles (ES can:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      can:= can+1
+  fin
+  proceso dejaPapeles(E av:numero; E ca:numero)
+  comenzar
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    repetir 5
+      depositarPapel
+    Pos(av,ca)
+    LiberarEsquina(50,50)
+  fin
+  proceso vaciaLaBolsa
+  comenzar
+    mientras(HayPapelEnLaBolsa)
+      depositarPapel
+  fin
+  proceso juntaFloresRandom (E cantid:numero; E rAve:numero; E rCa:numero; ES hayPapel:boolean)
+  comenzar
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    si(HayPapelEnLaEsquina)
+      mientras(HayPapelEnLaEsquina)&(cantid <> 0)
+        tomarPapel
+        cantid:= cantid -1
+    sino 
+      si(cantid = 0)
+        hayPapel:= V
+      sino
+        vaciaLaBolsa
+        hayPapel:= F
+    Pos(rAve,rCa)
+    LiberarEsquina(50,50)
+  fin
+areas
+  ciudad:AreaC(1,1,100,100)
+robots
+  robot productores 
+  variables
+    cantidad:numero
+    AV:numero
+    CA:numero
+  comenzar
+    cantidad:=0
+    CA:= PosCa
+    mientras(CA < 100)
+      si(HayPapelEnLaEsquina) 
+        agarrarPapeles(cantidad)
+      sino
+        mover
+      AV:=PosAv
+      CA:=PosCa
+      si(cantidad = 5)
+        dejaPapeles(AV,CA)
+        cantidad:=0
+  fin 
+  robot consumidores
+  variables
+    canti:numero
+    control:boolean
+    retornoCalle:numero
+    retornoAvenida:numero
+    hay:boolean
+    intentos:numero
+  comenzar
+    retornoAvenida:= PosAv
+    retornoCalle:=PosCa
+    intentos:= 0
+    control:= V
+    mientras(control = V)
+      Random(canti,2,5)
+      juntaFloresRandom(canti,retornoAvenida,retornoCalle,hay)
+      si(hay = V)
+        vaciaLaBolsa
+        intentos:=0
+      sino
+        intentos:= intentos +1
+      si(intentos = 8)
+        control := F
+  fin
+variables
+  produ1:productores
+  produ2:productores
+  consu1:consumidores
+  consu2:consumidores
+comenzar
+  AsignarArea(produ1,ciudad)
+  AsignarArea(produ2,ciudad)
+  AsignarArea(consu1,ciudad)
+  AsignarArea(consu2,ciudad)
+  Iniciar(produ1,5,1)
+  Iniciar(produ2,10,1)
+  Iniciar(consu1,11,1)
+  Iniciar(consu2,12,1)
+fin

@@ -1,0 +1,105 @@
+programa IncisoUNO
+procesos
+  proceso recorreParteUNO(ES cantP:numero)
+  comenzar
+    repetir 19
+      mientras(HayPapelEnLaEsquina)
+        tomarPapel
+        cantP := cantP+1
+      mover 
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      cantP:=cantP+1
+  fin
+  proceso recorreParteDOS(ES cant:numero)
+  comenzar
+    derecha
+    repetir 19
+      mientras(HayPapelEnLaEsquina)
+        tomarPapel
+        cant:= cant+1
+      mover
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      cant:=cant+1
+  fin
+  proceso recorreParteTRES(ES can:numero)
+  comenzar
+    derecha
+    derecha
+    repetir 19
+      mientras(HayPapelEnLaEsquina)
+        tomarPapel
+        can:= can+1
+      mover
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      can:= can+1
+  fin
+  proceso recorreParteCUATRO(ES cont:numero)
+  comenzar
+    derecha
+    derecha
+    derecha
+    repetir 19
+      mientras(HayPapelEnLaEsquina)
+        tomarPapel
+        cont:= cont+1
+      mover
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      cont:= cont+1
+  fin
+areas
+  parteUNO:AreaP(10,10,10,29)
+  parteDOS:AreaP(10,30,29,30)
+  parteTRES:AreaP(30,11,30,30)
+  parteCUATRO:AreaP(11,10,30,10)
+robots
+  robot robot1
+  variables
+    cantPapeles:numero
+  comenzar
+    cantPapeles:=0
+    recorreParteUNO(cantPapeles)
+    Informar(cantPapeles)
+  fin
+  robot robot2
+  variables
+    cantPapel:numero
+  comenzar
+    cantPapel:=0
+    recorreParteDOS(cantPapel)
+    Informar(cantPapel)
+  fin
+  robot robot3
+  variables
+    canti:numero
+  comenzar
+    canti:=0
+    recorreParteTRES(canti)
+    Informar(canti)
+  fin
+  robot robot4
+  variables 
+    contador:numero
+  comenzar
+    contador:=0
+    recorreParteCUATRO(contador)
+    Informar(contador)
+  fin
+variables
+  r1:robot1
+  r2:robot2
+  r3:robot3
+  r4:robot4
+comenzar
+  AsignarArea(r1,parteUNO)
+  AsignarArea(r2,parteDOS)
+  AsignarArea(r3,parteTRES)
+  AsignarArea(r4,parteCUATRO)
+  Iniciar(r1,10,10)
+  Iniciar(r2,10,30)
+  Iniciar(r3,30,30)
+  Iniciar(r4,30,10)
+fin

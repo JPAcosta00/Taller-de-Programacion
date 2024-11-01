@@ -1,0 +1,51 @@
+programa IncisoUNO
+procesos
+  proceso preguntaPapeles(ES cantidad:numero)
+  comenzar 
+    si(HayPapelEnLaEsquina)
+      cantidad:=cantidad+1
+  fin
+  proceso escalon(ES cuentaPapeles:numero;E seMueve:numero)
+  comenzar
+    repetir (seMueve)
+      preguntaPapeles(cuentaPapeles)
+      mover
+    derecha
+    repetir (seMueve)
+      preguntaPapeles(cuentaPapeles)
+      mover
+  fin
+areas
+  ciudad:AreaC(1,1,100,100)
+robots
+  robot robotEscalonero
+  variables 
+    mueve:numero
+    cant:numero
+    cuentaPa:numero
+  comenzar
+    cant:=0
+    cuentaPa:=0
+    mueve:=1
+    repetir 4
+      escalon(cuentaPa,mueve)
+      mueve := mueve+1
+      si(cuentaPa > 1)
+        cant:=cant+1
+      cuentaPa:=0
+      repetir 3
+        derecha
+    Informar(cant)
+  fin
+variables
+  robot1:robotEscalonero
+  robot2:robotEscalonero
+  robot3:robotEscalonero
+comenzar
+  AsignarArea(robot1,ciudad)
+  AsignarArea(robot2,ciudad)
+  AsignarArea(robot3,ciudad)
+  Iniciar(robot1,6,22)
+  Iniciar(robot2,10,17)
+  Iniciar(robot3,14,12)
+fin

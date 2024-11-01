@@ -1,0 +1,62 @@
+programa ejercicio1
+procesos
+  proceso preguntaFlores(ES cant:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      cant:=cant+1
+  fin
+  proceso juntaFlores(ES cantidad:numero)
+  comenzar
+    repetir 9 
+      preguntaFlores(cantidad)
+      mover
+    preguntaFlores(cantidad)
+  fin
+areas
+  ciudad:AreaC(1,1,100,100)
+robots
+  robot juntador 
+  variables 
+    cantF:numero
+  comenzar 
+    juntaFlores(cantF)
+    EnviarMensaje(cantF,jefe)
+  fin 
+  robot jeff
+  variables
+    max:numero
+    cantFlores:numero
+  comenzar
+    max:=0
+    cantFlores:=0
+    repetir 6 
+      RecibirMensaje(cantFlores,*)
+      si(cantFlores > max)
+        max:= cantFlores
+    Informar(max)
+  fin
+variables 
+  jefe:jeff
+  robot1:juntador
+  robot2:juntador
+  robot3:juntador
+  robot4:juntador
+  robot5:juntador
+  robot6:juntador
+comenzar
+  AsignarArea(jefe,ciudad)
+  AsignarArea(robot1,ciudad)
+  AsignarArea(robot2,ciudad)
+  AsignarArea(robot3,ciudad)
+  AsignarArea(robot4,ciudad)
+  AsignarArea(robot5,ciudad)
+  AsignarArea(robot6,ciudad)
+  Iniciar(jefe,2,1)
+  Iniciar(robot1,1,1)
+  Iniciar(robot2,2,11)
+  Iniciar(robot3,3,21)
+  Iniciar(robot4,4,31)
+  Iniciar(robot5,5,41)
+  Iniciar(robot6,6,51)
+fin

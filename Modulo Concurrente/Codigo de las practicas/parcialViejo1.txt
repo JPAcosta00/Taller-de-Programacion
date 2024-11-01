@@ -1,0 +1,160 @@
+programa parcialViejo
+procesos
+  proceso mandaIDs
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(4,r4)
+  fin
+  proceso juntaUnaFlor
+  comenzar
+    si(HayFlorEnLaEsquina)
+      tomarFlor
+  fin
+  proceso dejaUnaFlor
+  variables
+    av:numero
+    ca:numero
+  comenzar
+    av:=PosAv
+    ca:=PosCa
+    BloquearEsquina(1,6)
+    Pos(1,6)
+    depositarFlor
+    Pos(av,ca)
+    LiberarEsquina(1,6)
+  fin
+  proceso dejaFlores(E quienSoy:numero)
+  comenzar
+    mientras(HayFlorEnLaBolsa)
+      dejaUnaFlor
+    EnviarMensaje(quienSoy,jefe)
+  fin
+  proceso pasan(E clasi:numero)
+  comenzar
+    si(clasi = 1)
+      EnviarMensaje(V,r1)
+    sino
+      si(clasi = 2)
+        EnviarMensaje(V,r2)
+      sino 
+        si(clasi = 3)
+          EnviarMensaje(V,r3)
+        sino
+          EnviarMensaje(V,r4)
+  fin
+  proceso afuera (E jugador:numero)
+  comenzar
+    si(jugador = 1)
+      EnviarMensaje(F,r1)
+    sino
+      si(jugador = 2)
+        EnviarMensaje(F,r2)
+      sino
+        si(jugador = 3)
+          EnviarMensaje(F,r3)
+        sino
+          EnviarMensaje(F,r4)
+  fin
+  proceso mandaClasificados (E cla1:numero; E cla2:numero)
+  comenzar
+    pasan(cla1)
+    pasan(cla2)
+  fin
+  proceso mandaEliminados(E eli1:numero; E eli2:numero)
+  comenzar
+    afuera(eli1)
+    afuera(eli2)
+  fin
+  proceso apunta
+  comenzar
+    repetir 2
+      derecha
+  fin
+areas
+  callesCarreras:AreaP(1,1,20,4)
+  deposito:AreaPC(1,6,1,6)
+  esqJefe:AreaP(1,5,1,5)
+robots
+  robot fiscalizador
+  variables
+    c1:numero
+    c2:numero
+    lugares:numero
+    quien:numero
+    ganador:numero
+    eliminado1:numero
+    eliminado2:numero
+  comenzar
+    lugares:=0
+    mandaIDs
+    repetir 4
+      RecibirMensaje(quien,*)
+      si(lugares = 0)                   {primeros dos clasificados}
+        c1:=quien
+        lugares:=1
+      sino
+        si(lugares = 1)
+          c2:=quien
+          lugares:=2
+      si(lugares = 2)                   {segundos dos eliminados}
+        eliminado1:= quien
+        lugares:= 3      
+      sino
+        si(lugares = 3)
+          eliminado2:=quien
+          lugares:=4
+    lugares:=0
+    mandaClasificados(c1,c2)
+    mandaEliminados(eliminado1,eliminado2)
+    repetir 2
+      RecibirMensaje(quien,*)
+      si(lugares = 0)
+        ganador:=quien
+        lugares:=1
+    Informar(ganador)
+  fin
+  robot corredor
+  variables
+    quienEs:numero
+    queHace:boolean
+  comenzar
+    derecha
+    RecibirMensaje(quienEs,jefe)
+    repetir 19
+      juntaUnaFlor
+      mover
+    juntaUnaFlor
+    dejaFlores(quienEs)
+    RecibirMensaje(queHace,jefe)
+    si(queHace = V)
+      apunta
+      repetir 19
+        juntaUnaFlor
+        mover
+      juntaUnaFlor
+      dejaFlores(quienEs)
+  fin
+variables
+  r1:corredor
+  r2:corredor
+  r3:corredor
+  r4:corredor
+  jefe:fiscalizador
+comenzar
+  AsignarArea(r1,callesCarreras)
+  AsignarArea(r1,deposito)
+  AsignarArea(r2,callesCarreras)
+  AsignarArea(r2,deposito)
+  AsignarArea(r3,callesCarreras)
+  AsignarArea(r3,deposito)
+  AsignarArea(r4,callesCarreras)
+  AsignarArea(r4,deposito)
+  AsignarArea(jefe,esqJefe)
+  Iniciar(jefe,1,5)
+  Iniciar(r1,1,1)
+  Iniciar(r2,1,2)
+  Iniciar(r3,1,3)
+  Iniciar(r4,1,4)
+fin

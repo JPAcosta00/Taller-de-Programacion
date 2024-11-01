@@ -1,0 +1,94 @@
+programa ejercicio1
+procesos
+  proceso juntaFlores
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor 
+  fin
+  proceso mandaIdentificadores
+  comenzar
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    EnviarMensaje(3,robot3)
+  fin
+  proceso mandaConfirmacion(E iden:numero)
+  comenzar
+    si(iden = 1)
+      EnviarMensaje(V,robot1)
+    sino 
+      si(iden = 2)
+        EnviarMensaje(V,robot2)
+      sino 
+        EnviarMensaje(V,robot3)
+  fin
+areas
+  ciudad:AreaC(1,1,100,100)
+robots
+  robot servidor
+  variables
+    id:numero
+    cantidad:numero
+    terminaron:numero
+    avenida:numero
+    calle:numero
+  comenzar
+    terminaron:=0
+    mandaIdentificadores
+    mientras(terminaron <> 3)
+      RecibirMensaje(id,*)
+      RecibirMensaje(cantidad,*)
+      si(cantidad <> 0)
+        RecibirMensaje(avenida,*)
+        RecibirMensaje(calle,*)
+        BloquearEsquina(avenida,calle)
+        Pos(avenida,calle)
+        repetir cantidad
+          depositarFlor
+        Pos(100,100)
+        LiberarEsquina(avenida,calle)
+        mandaConfirmacion(id)
+      sino 
+        terminaron:= terminaron+1
+  fin
+  robot cliente
+  variables
+    termina:boolean
+    quienSoy:numero
+    cant:numero
+  comenzar
+    termina:= F
+    RecibirMensaje(quienSoy,robotServidor)
+    mientras(termina = F)
+      Random(cant,1,4)
+      EnviarMensaje(quienSoy,robotServidor)
+      EnviarMensaje(cant,robotServidor)
+      EnviarMensaje(PosAv,robotServidor)
+      EnviarMensaje(PosCa+1,robotServidor)
+      RecibirMensaje(yaEsta,robotServidor)
+      si(yaEsta = V)
+        Pos(PosAv,PosCa+1)
+        juntaFlores
+        Pos(PosAv,PosCa-1)
+        mientras(HayFlorEnLaBolsa)&(PosAv < 100)
+          depositarFlor
+          mover
+      si(PosAv = 100)
+        EnviarMensaje(quienSoy,robotServidor)
+        EnviarMensaje(0,robotServidor)
+        termina:=V
+  fin
+variables
+  robotServidor:servidor
+  robot1:cliente
+  robot2:cliente
+  robot3:cliente
+comenzar
+  AsignarArea(robotServidor,ciudad)
+  AsignarArea(robot1,ciudad)
+  AsignarArea(robot2,ciudad)
+  AsignarArea(robot3,ciudad)
+  Iniciar(robotServidor,100,100)
+  Iniciar(robot1,1,1)
+  Iniciar(robot2,2,1)
+  Iniciar(robot3,3,1)
+fin

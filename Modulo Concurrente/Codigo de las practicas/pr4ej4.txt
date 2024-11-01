@@ -1,0 +1,115 @@
+programa ejercicio4
+procesos
+  proceso mandaTarea(E tipo:numero; E numC:numero; E numA:numero; E quienEs:numero)
+  comenzar
+    si(quienEs = 1)
+      EnviarMensaje(V,robot1)
+      EnviarMensaje(tipo,robot1)
+      EnviarMensaje(numC,robot1)
+      EnviarMensaje(numA,robot1)
+    sino
+      EnviarMensaje(V,robot2)
+      EnviarMensaje(tipo,robot2)
+      EnviarMensaje(numC,robot2)
+      EnviarMensaje(numA,robot2)
+  fin
+  proceso recogerFlores
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+  fin
+  proceso recogerPapeles
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel 
+  fin
+  proceso vaciarBolsa
+  comenzar
+    mientras(HayPapelEnLaBolsa)
+      depositarPapel
+    mientras(HayFlorEnLaBolsa)
+      depositarFlor
+  fin
+  proceso realiza(E hacer:numero)
+  comenzar
+    si(hacer = 1)
+      recogerFlores
+    sino
+      si(hacer = 2)
+        recogerPapeles
+      sino 
+        vaciarBolsa
+  fin
+  proceso ejecutaTarea(E queHago:numero; E numCa:numero; E numAve:numero)
+  variables
+    AV:numero
+    CA:numero
+  comenzar
+    AV:=PosAv
+    CA:=PosCa
+    BloquearEsquina(numAve,numCa)
+    Pos(numAve,numCa)
+    realiza(queHago)
+    Pos(AV,CA)
+    LiberarEsquina(numAve,numCa)
+  fin
+areas
+  cuadrante:AreaPC(2,2,100,100)
+  areaJefe:AreaC(1,1,1,1)
+robots
+  robot jefe
+  variables
+    tarea:numero
+    calle:numero
+    avenida:numero
+    termino:boolean
+    numeroTareas:numero
+    trabajador:numero
+    controla:boolean
+  comenzar
+    controla:=V
+    numeroTareas:=0
+    mientras(controla = V)
+      si(numeroTareas = 10)
+        controla:= F
+        EnviarMensaje(F,robot1)
+        EnviarMensaje(F,robot2)
+      sino 
+        Random(trabajador,1,2)
+        Random(tarea,1,3)
+        Random(calle,2,100)
+        Random(avenida,2,100)
+        mandaTarea(tarea,calle,avenida,trabajador)
+        RecibirMensaje(termino,*)
+        si(termino = V)
+          numeroTareas:= numeroTareas+1
+  fin
+  robot trabajador
+  variables
+    queHace:numero
+    numCalle:numero
+    numAvenida:numero
+    control:boolean
+  comenzar
+    RecibirMensaje(control,robotJefe)
+    si(control = V)
+      RecibirMensaje(queHace,robotJefe)
+      RecibirMensaje(numCalle,robotJefe)
+      RecibirMensaje(numAvenida,robotJefe)
+      ejecutaTarea(queHace,numCalle,numAvenida)
+    EnviarMensaje(V,robotJefe)
+  fin
+variables
+  robotJefe:jefe
+  robot1:trabajador
+  robot2:trabajador
+comenzar
+  AsignarArea(robotJefe,areaJefe)
+  AsignarArea(robot1,cuadrante)
+  AsignarArea(robot1,areaJefe)
+  AsignarArea(robot2,cuadrante)
+  AsignarArea(robot2,areaJefe)
+  Iniciar(robotJefe,1,1)
+  Iniciar(robot1,2,2)
+  Iniciar(robot2,3,2)
+fin

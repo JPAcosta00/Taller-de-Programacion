@@ -1,0 +1,167 @@
+programa ejercicio1
+procesos
+  proceso mandaIDs
+  comenzar
+    EnviarMensaje(1,rojo1)
+    EnviarMensaje(2,rojo2)
+    EnviarMensaje(3,azul1)
+    EnviarMensaje(4,azul2)
+  fin
+  proceso recibirCantidad (E id:numero; ES cantRojo:numero; ES cantAzul:numero)
+  variables
+    cant:numero
+  comenzar
+    si(id = 1)
+      RecibirMensaje(cant,rojo1)
+      cantRojo:= cantRojo + cant
+    sino
+      si(id = 2)
+        RecibirMensaje(cant,rojo2)
+        cantRojo:= cantRojo + cant
+      sino
+        si(id = 3)
+          RecibirMensaje(cant,azul1)
+          cantAzul:= cantAzul + cant
+        sino
+          RecibirMensaje(cant,azul2)
+          cantAzul:= cantAzul + cant
+  fin
+  proceso juntaFlores(ES ca:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      ca:= ca+1
+      tomarFlor
+  fin
+  proceso trabajaFlores(ES cantidad:numero; ES numCalle:numero; ES numAvenida:numero)
+  comenzar
+    BloquearEsquina(numAvenida,numCalle)
+    mover
+    juntaFlores(cantidad)
+    numCalle:= numCalle+1
+    BloquearEsquina(numAvenida,numCalle)
+    mover
+    LiberarEsquina(numAvenida,numCalle-1)
+    juntaFlores(cantidad)
+    mover
+    LiberarEsquina(numAvenida,numCalle)
+  fin
+  proceso juntaPapeles (ES can:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      can:= can+1
+      tomarPapel
+  fin
+  proceso trabajaPapeles(ES cantP:numero; ES numA:numero; ES numeroCalle:numero)
+  comenzar
+    BloquearEsquina(numA,numeroCalle)
+    mover
+    juntaPapeles(cantP)
+    numA:= numA+1
+    BloquearEsquina(numA,numeroCalle)
+    mover
+    LiberarEsquina(numA-1,numeroCalle)
+    juntaPapeles(cantP)
+    mover
+    LiberarEsquina(numA,numeroCalle)
+  fin
+areas
+  esquina1:AreaPC(2,99,2,99)
+  esquina2:AreaPC(3,98,3,98)
+  esquina3:AreaPC(2,98,2,98)
+  esquina4:AreaPC(3,99,3,99)
+  avRojo1:AreaP(2,1,2,97)
+  avRojo2:AreaP(3,1,3,97)
+  esquinaRojo1:AreaP(2,100,2,100)
+  esquinaRojo2:AreaP(3,100,3,100)
+  avAzul1:AreaP(1,98,1,98)
+  avAzul2:AreaP(1,99,1,99)
+  calleAzul1:AreaP(4,98,100,98)
+  calleAzul2:AreaP(4,99,100,99)
+  esquinaJefe:AreaC(100,1,100,1)
+robots
+  robot fiscalizador
+  variables
+    iden:numero
+    cuanto1:numero
+    cuanto2:numero
+  comenzar
+    mandaIDs
+    repetir 4
+      RecibirMensaje(iden,*)
+      recibirCantidad(iden,cuanto1,cuanto2)
+    si(cuanto1 > cuanto2)
+      Informar(1)
+    sino 
+      Informar(2)
+  fin
+  robot equipoRojo
+  variables
+    quienSoy:numero
+    cant:numero
+    CA:numero
+    nav:numero
+  comenzar
+    CA:=98
+    cant:=0
+    RecibirMensaje(quienSoy,robotJefe)
+    mientras(PosCa < 100)
+      si(PosCa+1 = CA)
+        nav:= PosAv
+        trabajaFlores(cant,CA,nav)
+      sino 
+        juntaFlores(cant)
+        mover
+    EnviarMensaje(quienSoy,robotJefe)
+    EnviarMensaje(cant,robotJefe)
+  fin
+  robot equipoAzul
+  variables
+    quienEs:numero
+    av:numero
+    cantPapeles:numero
+    ncalle:numero
+  comenzar
+    derecha
+    av:= 2
+    cantPapeles:=0
+    RecibirMensaje(quienEs,robotJefe)
+    mientras(PosAv < 100)
+      si(PosAv+1 = av)
+        ncalle:= PosCa  
+        trabajaPapeles(cantPapeles,av,ncalle)
+      sino
+        juntaPapeles(cantPapeles)
+        mover
+    EnviarMensaje(quienEs,robotJefe)
+    EnviarMensaje(cantPapeles,robotJefe)
+  fin
+variables
+  rojo1:equipoRojo
+  rojo2:equipoRojo
+  azul1:equipoAzul
+  azul2:equipoAzul
+  robotJefe:fiscalizador
+comenzar
+  AsignarArea(robotJefe,esquinaJefe)
+  AsignarArea(rojo1,avRojo1)
+  AsignarArea(rojo1,esquinaRojo1)
+  AsignarArea(rojo1,esquina1)
+  AsignarArea(rojo1,esquina3)
+  AsignarArea(rojo2,avRojo2)
+  AsignarArea(rojo2,esquinaRojo2) 
+  AsignarArea(rojo2,esquina2)
+  AsignarArea(rojo2,esquina4)
+  AsignarArea(azul1,avAzul1)
+  AsignarArea(azul1,calleAzul1)
+  AsignarArea(azul1,esquina2)
+  AsignarArea(azul1,esquina3)
+  AsignarArea(azul2,avAzul2)
+  AsignarArea(azul2,calleAzul2)
+  AsignarArea(azul2,esquina1)
+  AsignarArea(azul2,esquina4)
+  Iniciar(robotJefe,100,1)
+  Iniciar(rojo1,2,1)
+  Iniciar(rojo2,3,1)
+  Iniciar(azul1,1,98)
+  Iniciar(azul2,1,99)
+fin

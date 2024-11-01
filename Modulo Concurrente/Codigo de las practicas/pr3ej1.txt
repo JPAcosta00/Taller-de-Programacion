@@ -1,0 +1,92 @@
+programa ejercicio1
+procesos
+  proceso juntaFlores(E numA:numero; E numC:numero)
+  comenzar
+    Pos(numA,numC)
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor 
+  fin
+  proceso dejaFlores
+  comenzar
+    mientras(HayFlorEnLaBolsa)
+      depositarFlor
+  fin
+  proceso juntaPapeles(E ave:numero; E call:numero)
+  comenzar
+    Pos(ave,call)
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+  proceso dejaPapeles
+  comenzar
+    mientras(HayPapelEnLaBolsa)
+      depositarPapel
+  fin
+areas
+  ciudad:AreaC(5,9,100,100)
+  flores:AreaP(1,1,5,10)
+  papeles:AreaP(6,1,10,9)
+robots
+  robot floreros
+  variables
+    calle:numero
+    avenida:numero
+    vuelveAV:numero
+    vuelveCA:numero
+  comenzar
+    vuelveAV:= PosAv
+    vuelveCA:= PosCa
+    repetir 5
+      Random(calle,1,10)
+      Random(avenida,1,5)
+      BloquearEsquina(avenida,calle)
+      juntaFlores(avenida,calle)
+      Pos(vuelveAV,vuelveCA)
+      LiberarEsquina(avenida,calle)
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    dejaFlores
+    Pos(vuelveAV,vuelveCA)
+    LiberarEsquina(10,10)
+  fin
+  robot papeleros
+  variables 
+    av:numero
+    ca:numero
+    retornoAv:numero
+    retornoCa:numero
+  comenzar
+    retornoAv:= PosAv
+    retornoCa:= PosCa
+    repetir 3
+      Random(av,6,10)
+      Random(ca,1,9)
+      BloquearEsquina(av,ca)
+      juntaPapeles(av,ca)
+      Pos(retornoAv,retornoCa)
+      LiberarEsquina(av,ca)
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    dejaPapeles
+    Pos(retornoAv,retornoCa)
+    LiberarEsquina(10,10)
+  fin
+variables
+  florero1:floreros
+  florero2:floreros
+  papelero1:papeleros
+  papelero2:papeleros
+comenzar
+  AsignarArea(florero1,ciudad)
+  AsignarArea(florero1,flores)
+  AsignarArea(florero2,ciudad)
+  AsignarArea(florero2,flores)
+  AsignarArea(papelero1,ciudad)     {consultar como declarar las areas}
+  AsignarArea(papelero1,papeles)
+  AsignarArea(papelero2,ciudad)
+  AsignarArea(papelero2,papeles)
+  Iniciar(florero1,6,10)
+  Iniciar(florero2,7,10)
+  Iniciar(papelero1,8,10)
+  Iniciar(papelero2,9,10)
+fin

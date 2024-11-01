@@ -1,0 +1,204 @@
+programa ejercicio6
+procesos
+  proceso preguntaFlores
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+  fin
+  proceso preguntaPapeles
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+  proceso dejaFlores
+  comenzar
+    mientras(HayFlorEnLaBolsa)&(PosAv < 100)
+      depositarFlor
+      mover
+  fin
+  proceso dejaPapeles
+  comenzar
+    mientras(HayPapelEnLaBolsa)&(PosAv < 100)
+      depositarPapel
+      mover 
+  fin
+  proceso mandaInformacion(E quien:numero)
+  comenzar
+    si(quien = 1)
+      EnviarMensaje(20,robot1)
+    sino
+      si(quien = 2)
+        EnviarMensaje(21,robot2)
+      sino 
+        EnviarMensaje(22,robot3)
+  fin
+  proceso mandaIDs
+  comenzar
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    EnviarMensaje(3,robot3)
+  fin
+  proceso trabajar(E numA:numero; E numC:numero; E queJunta:numero)
+  comenzar
+    BloquearEsquina(numA,numC)
+    mover
+    si(queJunta = 1)
+      preguntaFlores
+    sino 
+      si(queJunta = 2)
+        preguntaPapeles
+      sino
+        si(queJunta = 3)
+          preguntaFlores
+          preguntaPapeles
+    mover
+    LiberarEsquina(numA,numC)
+  fin
+  proceso labura (ES canti:numero)
+  comenzar
+    preguntaPapeles
+    preguntaFlores
+    mover
+    canti:=canti-1
+  fin
+areas
+  cuadrante1:AreaPC(2,2,16,16)
+  areaCompartida:AreaC(1,20,100,100)
+robots
+  robot jefe
+  variables
+    termino:boolean
+    quienTermino:numero
+  comenzar
+    mandaIDs
+    repetir 3
+      RecibirMensaje(termino,*)
+      si(termino = V)
+        RecibirMensaje(quienTermino,*)
+        mandaInformacion(quienTermino)
+  fin
+  robot primero
+  variables
+    quienEs:numero
+    cant:numero
+    unaCalle:numero
+  comenzar
+    RecibirMensaje(quienEs,robotFiscalizador)
+    repetir 4
+      cant:=6
+      mientras(cant <> 0)
+        si(PosAv+1 = 5 )&(PosCa = 8)
+          trabajar(5,8,1)
+          cant:=cant-2
+        sino
+          si(PosAv = 8)&(PosCa-1 = 5)
+            trabajar(8,5,1)
+            cant:=cant-2
+          sino
+            preguntaFlores
+            mover
+            cant:= cant-1
+      derecha
+    EnviarMensaje(V,robotFiscalizador)
+    EnviarMensaje(quienEs,robotFiscalizador)
+    RecibirMensaje(unaCalle,robotFiscalizador)
+    Pos(1,unaCalle)
+    derecha
+    dejaFlores
+  fin
+  robot segundo
+  variables
+    quienSoy:numero
+    cant:numero
+    unaC:numero
+    lado:numero
+  comenzar
+    lado:=1
+    RecibirMensaje(quienSoy,robotFiscalizador)
+    repetir 4
+      cant:=10
+      mientras(cant <> 0)
+        si(lado = 1)
+          si((PosAv = 5)&(PosCa+1 = 8))
+            trabajar(5,8,3)
+            cant:=cant-2
+            lado:= lado+1
+          sino 
+            labura(cant)
+        si(lado = 2)
+          si((PosAv-1 = 8)&(PosCa = 5))
+            trabajar(8,5,3)
+            cant:=cant-2
+            lado:= lado+1
+          sino
+            labura(cant)
+        si(lado = 3)
+          si((PosAv+1 = 9)&(PosCa = 15))
+            trabajar(9,15,3)
+            cant:=cant-2
+            lado:= lado+1
+          sino
+            labura(cant)
+        si(lado = 4)
+          si((PosAv-1 = 15)&(PosCa = 9))
+            trabajar(15,9,3)
+            cant:=cant-2
+            lado:= lado+1
+          sino 
+            labura(cant)
+      derecha
+    EnviarMensaje(V,robotFiscalizador)
+    EnviarMensaje(quienSoy,robotFiscalizador)
+    RecibirMensaje(unaC,robotFiscalizador)
+    Pos(1,unaC)
+    derecha
+    dejaFlores
+    dejaPapeles
+  fin
+  robot tercero
+  variables
+    soy:numero
+    canti:numero
+    unaCa:numero
+  comenzar
+    RecibirMensaje(soy,robotFiscalizador)
+    repetir 4
+      canti:=7
+      mientras(canti <> 0)
+        si(PosAv = 9)&(PosCa+1 = 15)
+          trabajar(9,15,2)
+          canti:= canti-2
+        sino 
+          si(PosAv-1 = 15)&(PosCa = 9)
+            trabajar(15,9,2)
+            canti:=canti-2 
+          sino
+            preguntaPapeles
+            mover
+            canti:=canti-1
+      derecha
+    EnviarMensaje(V,robotFiscalizador)
+    EnviarMensaje(soy,robotFiscalizador)
+    RecibirMensaje(unaCa,robotFiscalizador)
+    Pos(1,unaCa)
+    derecha
+    dejaPapeles
+  fin
+variables
+  robot1:primero
+  robot2:segundo
+  robot3:tercero
+  robotFiscalizador:jefe
+comenzar
+  AsignarArea(robot1,cuadrante1)
+  AsignarArea(robot1,areaCompartida)
+  AsignarArea(robot2,cuadrante1)
+  AsignarArea(robot2,areaCompartida)
+  AsignarArea(robot3,cuadrante1)
+  AsignarArea(robot3,areaCompartida)
+  AsignarArea(robotFiscalizador,areaCompartida)
+  Iniciar(robot1,2,2)
+  Iniciar(robot2,5,5)
+  Iniciar(robot3,9,9)
+  Iniciar(robotFiscalizador,3,80)
+fin

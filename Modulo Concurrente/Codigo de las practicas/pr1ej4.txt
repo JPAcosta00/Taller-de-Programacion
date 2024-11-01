@@ -1,0 +1,67 @@
+programa ejercicio4
+procesos 
+  proceso preguntaFlores
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+  fin
+  proceso preguntaPapeles
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+  proceso consulta (E iden:numero)
+  comenzar
+    si(iden = 1)
+      preguntaFlores
+    sino 
+      preguntaPapeles
+  fin 
+  proceso recorreCalles (E identificador:numero)
+  comenzar
+    repetir 99
+      consulta(identificador)
+      mover
+    consulta(identificador)
+  fin
+areas
+  areaUno:AreaP(1,1,25,100)
+  areaDos:AreaP(26,1,50,100)
+  areaTres:AreaP(51,1,75,100)
+  areaCuatro:AreaP(76,1,100,100)
+robots
+  robot impares
+  comenzar
+    repetir 24
+      recorreCalles(1)
+      Pos(PosAv+1,1)
+    recorreCalles(1)
+    Pos(51,1)
+    repetir 24
+      recorreCalles(1)
+      Pos(PosAv+1,1)
+    recorreCalles(1)
+  fin
+  robot pares
+  comenzar
+    repetir 24
+      recorreCalles(2)
+      Pos(PosAv+1,1)
+    recorreCalles(2)
+    Pos(76,1)
+    repetir 24
+      recorreCalles(2)
+      Pos(PosAv+1,1)
+    recorreCalles(2)
+  fin
+variables
+  robot1:impares
+  robot2:pares
+comenzar
+  AsignarArea(robot1,areaUno)
+  AsignarArea(robot1,areaTres)
+  AsignarArea(robot2,areaDos)
+  AsignarArea(robot2,areaCuatro)
+  Iniciar(robot1,1,1)
+  Iniciar(robot2,26,1)
+fin

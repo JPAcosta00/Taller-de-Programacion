@@ -1,0 +1,77 @@
+programa ejercicio3
+procesos
+  proceso preguntaPapeles(ES cantidadPapeles:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      cantidadPapeles:= cantidadPapeles+1
+      tomarPapel
+  fin
+  proceso preguntaFlores(ES cantidadFlores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      cantidadFlores:= cantidadFlores+1
+      tomarFlor
+  fin
+  proceso consultaInformacion (ES canP:numero; ES canF:numero ;ES can:numero)
+  comenzar
+    preguntaPapeles(canP)
+    preguntaFlores(canF)
+    si(canF > canP)
+      can:= can + 1
+  fin
+  proceso haceEscalon(ES canti:numero; E altura:numero)
+  variables
+    cantFlores,cantPapeles:numero
+  comenzar
+    cantFlores:=0
+    cantPapeles:=0
+    repetir altura 
+      consultaInformacion(cantPapeles,cantFlores,canti)
+      mover
+    derecha
+    mover
+    consultaInformacion(cantPapeles,cantFlores,canti)
+  fin
+areas
+  ciudad:AreaC(1,1,100,100)
+robots
+  robot escalonero
+  variables
+    alto:numero
+    cant:numero
+  comenzar
+    cant:=0
+    repetir 4
+      Random(alto,1,5)
+      haceEscalon(cant,alto)
+      repetir 3
+        derecha
+    EnviarMensaje(cant,robotJefe)
+  fin
+  robot jefe
+  variables
+    cantidad:numero
+    suma:numero
+  comenzar
+    cantidad:=0
+    suma:=0
+    repetir 3
+      RecibirMensaje(cantidad,*)
+      suma:= suma+cantidad
+    Informar(suma)
+  fin
+variables 
+  robotJefe:jefe
+  robot1:escalonero
+  robot2:escalonero
+  robot3:escalonero
+comenzar
+  AsignarArea(robotJefe,ciudad)
+  AsignarArea(robot1,ciudad)
+  AsignarArea(robot2,ciudad)
+  AsignarArea(robot3,ciudad)
+  Iniciar(robotJefe,1,1)
+  Iniciar(robot1,2,1)
+  Iniciar(robot2,7,1)
+  Iniciar(robot3,12,1)
+fin

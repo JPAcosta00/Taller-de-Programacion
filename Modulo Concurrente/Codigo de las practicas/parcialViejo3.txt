@@ -1,0 +1,151 @@
+programa parcialViejo3
+procesos
+  proceso mandaIDs
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(4,r4)
+  fin
+  proceso recibeDatos(E quienEs:numero; ES canti:numero)
+  comenzar
+    si(quienEs = 1)
+      RecibirMensaje(canti,r1)
+    sino
+      si(quienEs = 2)
+        RecibirMensaje(canti,r2)
+      sino
+        si(quienEs = 3)
+          RecibirMensaje(canti,r3)
+        sino
+          si(quienEs = 4)
+            RecibirMensaje(canti,r4)
+  fin
+  proceso avisaAlMaximo (E robotMaximo:numero)
+  comenzar
+    si(robotMaximo = 1)
+      EnviarMensaje(V,r1)
+      EnviarMensaje(F,r2)
+      EnviarMensaje(F,r3)
+      EnviarMensaje(F,r4)
+    sino
+      si(robotMaximo = 2)
+        EnviarMensaje(V,r2)
+        EnviarMensaje(F,r1)
+        EnviarMensaje(F,r3)
+        EnviarMensaje(F,r4)
+      sino
+        si(robotMaximo = 3)
+          EnviarMensaje(V,r3)
+          EnviarMensaje(F,r1)
+          EnviarMensaje(F,r2)
+          EnviarMensaje(F,r4)
+        sino
+          EnviarMensaje(V,r4)
+          EnviarMensaje(F,r1)
+          EnviarMensaje(F,r2)
+          EnviarMensaje(F,r3)
+  fin
+  proceso juntaFlores(ES canF:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      canF:= canF+1
+      tomarFlor
+  fin
+  proceso juntaPapeles(ES canP:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      canP:= canP+1
+      tomarPapel
+  fin
+  proceso juntaElementos(E numA:numero; E numC:numero; ES cantid:numero)
+  variables
+    av:numero
+    ca:numero
+  comenzar
+    av:=PosAv
+    ca:=PosCa
+    BloquearEsquina(numA,numC)
+    Pos(numA,numC)
+    juntaFlores(cantid)
+    juntaPapeles(cantid)
+    Pos(av,ca)
+    LiberarEsquina(numA,numC)
+  fin
+  proceso dejaTodo
+  comenzar
+    mientras(HayFlorEnLaBolsa)
+      depositarFlor
+    mientras(HayPapelEnLaBolsa)
+      depositarPapel
+  fin
+areas
+  cuadrante:AreaPC(45,48,62,69)
+  areaR:AreaP(10,10,13,10)
+  areaJefe:AreaP(1,1,1,1)
+robots
+  robot tipoJefe
+  variables
+    control:boolean
+    quien:numero
+    cant:numero
+    robotMax:numero
+    maximo:numero
+  comenzar
+    maximo:=-1
+    mandaIDs
+    repetir 20
+      RecibirMensaje(control,*)
+    repetir 4
+      RecibirMensaje(quien,*)
+      recibeDatos(quien,cant)
+      si(maximo < cant)
+        robotMax:= quien
+        maximo:= cant
+    avisaAlMaximo(robotMax)
+  fin
+  robot recolector
+  variables
+    quienSoy:numero
+    calle:numero
+    avenida:numero
+    cantidad:numero
+    queHace:boolean
+  comenzar
+    cantidad:=0
+    RecibirMensaje(quienSoy,jefe)
+    repetir 5
+      Random(avenida,45,62)
+      Random(calle,48,69)
+      juntaElementos(avenida,calle,cantidad)
+      EnviarMensaje(V,jefe)
+    EnviarMensaje(quienSoy,jefe)
+    EnviarMensaje(cantidad,jefe)
+    RecibirMensaje(queHace,jefe)
+    si(queHace = V)
+      dejaTodo
+    sino
+      Informar(F)
+  fin
+variables
+  r1:recolector
+  r2:recolector
+  r3:recolector
+  r4:recolector
+  jefe:tipoJefe
+comenzar
+  AsignarArea(jefe,areaJefe)
+  AsignarArea(r1,cuadrante)
+  AsignarArea(r1,areaR)
+  AsignarArea(r2,cuadrante)
+  AsignarArea(r2,areaR)
+  AsignarArea(r3,cuadrante)
+  AsignarArea(r3,areaR)
+  AsignarArea(r4,cuadrante)
+  AsignarArea(r4,areaR)
+  Iniciar(jefe,1,1)
+  Iniciar(r1,10,10)
+  Iniciar(r2,11,10)
+  Iniciar(r3,12,10)
+  Iniciar(r4,13,10)
+fin

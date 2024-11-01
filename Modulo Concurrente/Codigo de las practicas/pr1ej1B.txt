@@ -1,0 +1,64 @@
+programa IncisoUNO
+procesos
+  proceso recorreAvenidas(ES cantFlores:numero; ES cantNoFlores:numero)
+  comenzar
+    repetir 99
+      si(~HayFlorEnLaEsquina)
+        cantNoFlores := cantNoFlores+1
+      sino
+        mientras(HayFlorEnLaEsquina)
+          tomarFlor
+          cantFlores := cantFlores+1
+      mover 
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+  fin
+areas
+  ciudad:AreaC(1,1,100,100)
+robots
+  robot robot1
+  variables
+    flores:numero
+    sinFlores:numero
+  comenzar 
+    flores:=0
+    sinFlores:=0
+    recorreAvenidas(flores,sinFlores)
+    Informar(flores)   
+    Informar(sinFlores)                     
+  fin
+  robot robot2
+  variables
+    flores:numero
+    sinFlores:numero
+  comenzar 
+    flores:=0
+    sinFlores:=0
+    recorreAvenidas(flores,sinFlores)
+    Informar(flores)   
+    Informar(sinFlores)             
+  fin
+  robot robot3
+  variables
+    flores:numero
+    sinFlores:numero
+  comenzar
+    flores:=0
+    sinFlores:=0
+    recorreAvenidas(flores,sinFlores)
+    Informar(flores)
+    Informar(sinFlores)
+  fin
+
+variables
+  r1:robot1
+  r2:robot2
+  r3:robot3
+comenzar
+  AsignarArea(r1,ciudad)
+  AsignarArea(r2,ciudad)
+  AsignarArea(r3,ciudad)
+  Iniciar(r1,1,1)
+  Iniciar(r2,3,1)
+  Iniciar(r3,5,1)
+fin
